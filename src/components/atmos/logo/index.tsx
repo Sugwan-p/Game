@@ -5,7 +5,7 @@ import Image from 'next/image';
 const Logo = () => {
   return (
     <Image
-      src="/assets/images/icon.png"
+      src="/assets/images/icon.svg"
       alt="UNO Logo"
       width={85}
       height={85}
