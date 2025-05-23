@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 
 export default function ProfileSetup() {
-  const [profileUrl, setProfileUrl] = useState<string | null>(null);
+  const [profileUrl] = useState<string | null>(null);
 
   const displayedImage = profileUrl ?? '/assets/images/default_profile.png'; // 기본값 지정
 
