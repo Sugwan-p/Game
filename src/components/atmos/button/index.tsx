@@ -1,21 +1,15 @@
-// 가장 작은 단위의 UI 요소
-import React from "react";
-
 interface ButtonProps {
-  onClick?: () => void;
-  children: React.ReactNode;
-  type?: "button" | "submit" | "reset";
+  text: string;
+  onClick: () => void;
 }
 
-const Button: React.FC<ButtonProps> = ({ onClick, children }) => {
+export const Button = ({ text, onClick }: ButtonProps) => {
   return (
     <button
       onClick={onClick}
-      className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+      className="w-45 bg-indigo-600 text-white py-3 rounded-full text-center font-semibold text-lg mt-8"
     >
-      {children}
+      {text}
     </button>
   );
 };
-
-export default Button;
