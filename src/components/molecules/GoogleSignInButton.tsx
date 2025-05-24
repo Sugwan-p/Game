@@ -1,8 +1,9 @@
 'use client';
 
 import { signInWithPopup } from 'firebase/auth';
-import { auth, provider } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
+import { auth, provider } from '@/lib/firebase';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
 const GoogleSignInButton = () => {
   const router = useRouter();
@@ -19,9 +20,19 @@ const GoogleSignInButton = () => {
         uid: user.uid,
       });
 
-      router.push('/login');
-    } catch (error) {
-      console.error(' 로그인 실패:', error);
+      const db = getFirestore();
+      const userDocRef = doc(db, 'users', user.uid);
+      const userDoc = await getDoc(userDocRef);
+
+      if (userDoc.exists()) {
+        // 이미 가입된 유저면 바로 홈 이동
+        router.push('/home');
+      } else {
+        //  신규 유저라면 로그인 성공 후 프로필 등록으로 이동
+        router.push('/login');
+      }
+    } catch {
+      alert('로그인에 실패했습니다.');
     }
   };
 
