@@ -25,7 +25,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
-        "./src/*"
+        "./src/*",
+        "./*" // 루트도 alias에 포함
+      ],
+      "@components/*": [
+        "./components/*" // 명시적으로 루트 components 바로 매핑
       ]
     }
   },

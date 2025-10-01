@@ -1,5 +1,5 @@
 <div>
-  <h1>S3K_FE</h1>
+  <h1>UNO_Game</h1>
 </div>
 
 ## 사용 언어 및 런타임
