@@ -1,7 +1,7 @@
 'use client';
 
 import { memo } from 'react';
-import OnlineTemplate from '@/components/templates/onlineTemplate';
+import OnlineTemplate from '@/components/templates/OnlineTemplate';
 
 const Page = () => (
   <>
