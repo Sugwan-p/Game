@@ -1,53 +1,141 @@
 'use client';
 
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import MainTemplate from '@/components/templates/MainTemplate';
 import HomeHeader from '@/components/molecules/HomeHeader';
 import RoomList from '@/components/organisms/RoomList';
+import CreateRoomModal from '@/components/organisms/CreateRoomModal';
 import type { Room } from '../../../../types/room';
-import Image from 'next/image';
+import { db } from '@/lib/firebase';
+import {
+  addDoc,
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+  Timestamp,
+} from 'firebase/firestore';
 
-const FAB_HEIGHT = 60; // 매직넘버 상수화
+const FAB_HEIGHT = 60;
+
+const MOCK_ROOMS: Room[] = [
+  { id: '1', title: '들어와', isPrivate: false },
+  { id: '2', title: '게임한번', isPrivate: false },
+  { id: '3', title: 'UNO 게임', isPrivate: true },
+  { id: '4', title: 'PLAY', isPrivate: true },
+  { id: '5', title: 'GAME', isPrivate: false },
+];
+
+type OnlineState = {
+  rooms: Room[];
+  loading: boolean;
+  error: string | null;
+  modalOpen: boolean;
+};
+
+const INITIAL: OnlineState = { rooms: [], loading: true, error: null, modalOpen: false };
+
+type RoomDoc = {
+  title: string;
+  isPrivate: boolean;
+  maxPlayers?: number;
+  password?: string | null; // 데모용(운영에서는 해시/규칙 필요)
+  createdAt?: Timestamp | number | null;
+};
 
 const OnlineTemplate = () => {
-  // 데모용 방 목록 (추후 API 연동 교체)
-  const rooms = useMemo<Room[]>(
-    () => [
-      { id: '1', title: '들어와', isPrivate: false },
-      { id: '2', title: '게임한번', isPrivate: false },
-      { id: '3', title: 'UNO 게임', isPrivate: true },
-      { id: '4', title: 'PLAY', isPrivate: true },
-      { id: '5', title: 'GAME', isPrivate: false },
-    ],
-    [],
+  const [state, setState] = useState<OnlineState>(INITIAL);
+
+  const openModal = useCallback(() => setState((s) => ({ ...s, modalOpen: true })), []);
+  const closeModal = useCallback(() => setState((s) => ({ ...s, modalOpen: false })), []);
+
+  // Firestore 구독
+  useEffect(() => {
+    const roomsRef = collection(db, 'rooms');
+    const q = query(roomsRef, orderBy('createdAt', 'desc'));
+
+    const unsub = onSnapshot(
+      q,
+      (snap) => {
+        const list: Room[] = snap.docs.map((d) => {
+          const data = d.data() as RoomDoc;
+
+          let createdAt: number | undefined;
+          if (typeof data.createdAt === 'number') createdAt = data.createdAt;
+          else if (data.createdAt instanceof Timestamp) createdAt = data.createdAt.toMillis();
+
+          return {
+            id: d.id,
+            title: data.title ?? '',
+            isPrivate: Boolean(data.isPrivate),
+            maxPlayers: data.maxPlayers,
+            createdAt,
+          };
+        });
+
+        setState((s) => ({ ...s, rooms: list, loading: false, error: null }));
+      },
+      (err) => setState((s) => ({ ...s, loading: false, error: err.message })),
+    );
+
+    return () => unsub();
+  }, []);
+
+  const displayRooms = useMemo<Room[]>(
+    () => (state.rooms.length ? state.rooms : MOCK_ROOMS),
+    [state.rooms],
   );
 
   const handleJoin = useCallback((roomId: string) => {
-    // TODO: 입장 로직 연결
+    // TODO: 입장 라우팅/검증
     console.log('join:', roomId);
   }, []);
 
-  const handleCreate = useCallback(() => {
-    // TODO: 방 만들기 로직 연결(모달 or 페이지 이동)
-    console.log('create room');
-  }, []);
+  const handleCreate = useCallback(
+    async (form: {
+      title: string;
+      password: string;
+      maxPlayers: number;
+      visibility: 'public' | 'private';
+    }) => {
+      try {
+        const roomsRef = collection(db, 'rooms');
+        await addDoc(roomsRef, {
+          title: form.title.trim(),
+          isPrivate: form.visibility === 'private',
+          maxPlayers: form.maxPlayers,
+          password: form.visibility === 'private' ? form.password : null, // 데모용 저장
+          createdAt: serverTimestamp(),
+        });
+        // onSnapshot으로 자동 반영
+      } catch (e) {
+        console.error(e);
+        alert('방 생성 중 오류가 발생했습니다.');
+      }
+    },
+    [],
+  );
 
   return (
     <>
       <MainTemplate>
         <HomeHeader />
-        <RoomList rooms={rooms} onJoin={handleJoin} />
+        <RoomList rooms={displayRooms} onJoin={handleJoin} />
 
         {/* 하단 고정 "방 만들기" 버튼 */}
         <div className="fabWrap">
-          <button type="button" className="fab" onClick={handleCreate} aria-label="방 만들기">
+          <button type="button" className="fab" onClick={openModal} aria-label="방 만들기">
             <span className="plus">
-              <Image src="/assets/icons/plus.svg" alt="추가" width={17} height={17} />
+              <img src="/assets/icons/plus.svg" alt="추가" width={17} height={17} />
             </span>
-            <span className="label">방 만들기</span>
+            <span className="label">{state.loading ? '불러오는 중…' : '방 만들기'}</span>
           </button>
         </div>
       </MainTemplate>
+
+      {/* 모달 */}
+      <CreateRoomModal open={state.modalOpen} onClose={closeModal} onCreate={handleCreate} />
 
       <style jsx>{`
         .fabWrap {
@@ -57,7 +145,8 @@ const OnlineTemplate = () => {
           bottom: 16px;
           display: grid;
           place-items: center;
-          pointer-events: none; /* 오직 버튼만 클릭 가능 */
+          pointer-events: none;
+          z-index: 10;
         }
         .fab {
           pointer-events: auto;
