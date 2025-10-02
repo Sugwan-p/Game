@@ -4,4 +4,5 @@ export interface Room {
   isPrivate: boolean;
   maxPlayers?: number;
   createdAt?: number; // ms
+  password?: string | null;
 }

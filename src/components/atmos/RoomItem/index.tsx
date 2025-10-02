@@ -16,9 +16,9 @@ const RoomItem = ({ title, isPrivate, onJoin }: Props) => (
         <span className="title">{title}</span>
       </div>
       <div className="right">
-        {isPrivate && (
+        {isPrivate ? (
           <Image src="/assets/icons/lock.svg" alt="잠금" width={16} height={16} className="lock" />
-        )}
+        ) : null}
         <button type="button" className="badge" onClick={onJoin} aria-label={`${title} 참여`}>
           참여
         </button>
