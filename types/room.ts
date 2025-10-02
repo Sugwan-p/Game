@@ -5,4 +5,5 @@ export interface Room {
   maxPlayers?: number;
   createdAt?: number; // ms
   password?: string | null;
+  hostUid?: string;
 }

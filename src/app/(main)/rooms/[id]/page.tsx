@@ -1,5 +1,10 @@
-'use client';
+import RoomClient from './RoomPageClient';
 
-export default function RoomPage() {
-  return <main className="p-4 text-black">방 꾸며야 함</main>;
+type PageProps = {
+  params: Promise<{ id: string }>;
+};
+
+export default async function Page({ params }: PageProps) {
+  const { id } = await params;
+  return <RoomClient roomId={id} />;
 }
