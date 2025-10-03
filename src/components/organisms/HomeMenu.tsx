@@ -10,75 +10,41 @@ const HomeMenu = () => {
   const handleAI = useCallback(() => {
     router.push('/ai');
   }, [router]);
+
   const handleOnline = useCallback(() => {
     router.push('/online');
   }, [router]);
 
   return (
-    <>
-      <section className="wrap" aria-label="메인 메뉴">
-        <div className="panel">
-          <div className="stack">
-            <div className="cardBox">
-              <CardButton title="AI와 게임하기" icon="robot" onClick={handleAI} />
-            </div>
-            <div className="cardBox">
-              <CardButton title="온라인 게임하기" icon="group" onClick={handleOnline} />
-            </div>
+    <section className="mt-7 px-4 md:px-5 lg:max-w-[720px] lg:mx-auto" aria-label="메인 메뉴">
+      <div
+        className="
+          rounded-[24px] bg-[#F5F7FB] border border-[#E7E5E4] p-[18px]
+          shadow-[0_10px_28px_rgba(0,0,0,0.06)]
+          sm:rounded-[28px] sm:p-[22px]
+          md:rounded-[32px] md:p-[26px]
+        "
+      >
+        <div className="grid gap-5 sm:gap-[22px]">
+          <div
+            className="
+              p-3 bg-white/60 rounded-[20px]
+              md:p-[14px] md:rounded-[22px]
+            "
+          >
+            <CardButton title="AI와 게임하기" icon="robot" onClick={handleAI} />
+          </div>
+          <div
+            className="
+              p-3 bg-white/60 rounded-[20px]
+              md:p-[14px] md:rounded-[22px]
+            "
+          >
+            <CardButton title="온라인 게임하기" icon="group" onClick={handleOnline} />
           </div>
         </div>
-      </section>
-
-      <style jsx>{`
-        .wrap {
-          padding: 16px;
-        }
-        .panel {
-          border-radius: 24px;
-          background: #f5f7fb;
-          border: 1px solid #e7e5e4;
-          padding: 18px;
-          box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
-        }
-        .stack {
-          display: grid;
-          gap: 20px;
-        }
-        .cardBox {
-          padding: 12px;
-          background: rgba(255, 255, 255, 0.6);
-          border-radius: 20px;
-        }
-        @media (min-width: 480px) {
-          .panel {
-            border-radius: 28px;
-            padding: 22px;
-          }
-          .stack {
-            gap: 22px;
-          }
-        }
-        @media (min-width: 768px) {
-          .wrap {
-            padding: 20px;
-          }
-          .panel {
-            border-radius: 32px;
-            padding: 26px;
-          }
-          .cardBox {
-            border-radius: 22px;
-            padding: 14px;
-          }
-        }
-        @media (min-width: 1024px) {
-          .wrap {
-            max-width: 720px;
-            margin: 0 auto;
-          }
-        }
-      `}</style>
-    </>
+      </div>
+    </section>
   );
 };
 
