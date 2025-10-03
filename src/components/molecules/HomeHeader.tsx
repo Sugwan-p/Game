@@ -12,77 +12,40 @@ const HomeHeader = () => {
   }, [router]);
 
   return (
-    <>
-      <header className="wrap" aria-label="Home header">
-        <div className="inner">
-          <div className="center">
-            <div className="logo">
-              <Image src="/assets/images/icon.svg" alt="앱 로고" width={72} height={72} priority />
-            </div>
-          </div>
-
-          <button
-            type="button"
-            className="trophy"
-            aria-label="랭크/업적 보러가기"
-            onClick={handleTrophy}
+    <header className="relative px-4 pt-4 bg-white" aria-label="Home header">
+      <div className="h-[88px] md:h-[96px]">
+        {/* 로고 영역 */}
+        <div className="flex justify-center items-center">
+          <div
+            className="
+              w-[76px] h-[76px] md:w-[84px] md:h-[84px]
+              grid place-items-center
+              bg-[#0C0A09] rounded-[16px] md:rounded-[20px]
+              shadow-[0_8px_24px_rgba(0,0,0,0.06)]
+            "
           >
-            <Image src="/assets/icons/trophy.svg" alt="트로피" width={24} height={24} />
-          </button>
+            <Image src="/assets/images/icon.svg" alt="앱 로고" width={72} height={72} priority />
+          </div>
         </div>
-      </header>
 
-      <style jsx>{`
-        .wrap {
-          position: relative;
-          padding: 16px 16px 0;
-          background: #ffffff;
-        }
-        .inner {
-          height: 88px;
-        }
-        .center {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        .logo {
-          width: 76px;
-          height: 76px;
-          display: grid;
-          place-items: center;
-          background: #0c0a09;
-          border-radius: 16px;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-        }
-        .trophy {
-          position: absolute;
-          right: 16px;
-          top: 12px;
-          display: grid;
-          place-items: center;
-          width: 44px;
-          height: 44px;
-          background: #fff;
-          border: 1px solid #e7e5e4;
-          border-radius: 999px;
-          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-        }
-        .trophy:active {
-          transform: scale(0.98);
-        }
-        @media (min-width: 768px) {
-          .inner {
-            height: 96px;
-          }
-          .logo {
-            width: 84px;
-            height: 84px;
-            border-radius: 20px;
-          }
-        }
-      `}</style>
-    </>
+        {/* 트로피 버튼 */}
+        <button
+          type="button"
+          aria-label="랭크/업적 보러가기"
+          onClick={handleTrophy}
+          className="
+            absolute right-4 top-3
+            grid place-items-center
+            w-11 h-11
+            bg-white border border-[#E7E5E4] rounded-full
+            shadow-[0_4px_14px_rgba(0,0,0,0.06)]
+            active:scale-95 transition-transform
+          "
+        >
+          <Image src="/assets/icons/trophy.svg" alt="트로피" width={24} height={24} />
+        </button>
+      </div>
+    </header>
   );
 };
 
