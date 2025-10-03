@@ -124,58 +124,38 @@ const OnlineTemplate = () => {
         <RoomList rooms={displayRooms} onJoin={handleJoin} />
 
         {/* 하단 고정 "방 만들기" 버튼 */}
-        <div className="fabWrap">
-          <button type="button" className="fab" onClick={openModal} aria-label="방 만들기">
-            <span className="plus">
+        <div className="fixed inset-x-0 bottom-4 grid place-items-center pointer-events-none z-10">
+          <button
+            type="button"
+            onClick={openModal}
+            aria-label="방 만들기"
+            style={{ height: FAB_HEIGHT }} // ← 높이 보장 (60px)
+            className={`
+              pointer-events-auto inline-flex items-center gap-3
+              px-5 rounded-full
+              bg-[#9aa4ae] text-white
+              shadow-[0_8px_22px_rgba(0,0,0,0.12)]
+              border border-[#E7E5E4]
+              font-extrabold tracking-[0.2px]
+              active:scale-[0.98] transition-transform
+            `}
+          >
+            <span
+              className={`
+                inline-grid place-items-center
+                w-[26px] h-[26px] rounded-full
+                bg-[#F0F3F8] border border-[#E7E5E4]
+              `}
+            >
               <img src="/assets/icons/plus.svg" alt="추가" width={17} height={17} />
             </span>
-            <span className="label">{state.loading ? '불러오는 중…' : '방 만들기'}</span>
+            <span>{state.loading ? '불러오는 중…' : '방 만들기'}</span>
           </button>
         </div>
       </MainTemplate>
 
       {/* 모달 */}
       <CreateRoomModal open={state.modalOpen} onClose={closeModal} onCreate={handleCreate} />
-
-      <style jsx>{`
-        .fabWrap {
-          position: fixed;
-          left: 0;
-          right: 0;
-          bottom: 16px;
-          display: grid;
-          place-items: center;
-          pointer-events: none;
-          z-index: 10;
-        }
-        .fab {
-          pointer-events: auto;
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
-          height: ${FAB_HEIGHT}px;
-          padding: 0 20px;
-          border-radius: 999px;
-          background: #9aa4ae;
-          color: #fff;
-          box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
-          border: 1px solid #e7e5e4;
-          font-weight: 800;
-          letter-spacing: 0.2px;
-        }
-        .fab:active {
-          transform: scale(0.98);
-        }
-        .plus {
-          display: inline-grid;
-          place-items: center;
-          width: 26px;
-          height: 26px;
-          border-radius: 999px;
-          background: #f0f3f8;
-          border: 1px solid #e7e5e4;
-        }
-      `}</style>
     </>
   );
 };
